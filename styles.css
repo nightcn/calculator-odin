@@ -10,12 +10,16 @@
   height: 50vh;
   display: flex;
   flex-direction: column;
+  min-width: 400px;
+  min-height: 600px;
 }
 
 .display-container {
   padding-top: 30px;
-  padding-right: 20px;
-  height: 30%;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  min-height: 30%;
   background-color: #20a7a1;
   /* border: 1px solid red; */
 
@@ -24,24 +28,30 @@
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
   /*  */
+
+  font-family: "Monotype";
 }
 
 .screen {
   flex: 1 0 60%;
   direction: rtl;
   /* border: 1px solid pink; */
+
+  padding: 5px;
+  font-size: 1rem;
 }
 
 .screenSmall {
   flex: 1 0 20%;
   direction: rtl;
+  border-bottom: 1px solid white;
 }
 
 button {
 }
 
 .controls {
-  flex: 1 0 5%;
+  flex: 1 0 15%;
   display: flex;
 }
 
@@ -120,4 +130,15 @@ button {
 
 .btn.operator[name="equal"] {
   flex: 1 0 50%;
+}
+
+@media (width >= 400px) {
+  .screen {
+    font-size: 4rem;
+  }
+
+  .screenSmall {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
 }

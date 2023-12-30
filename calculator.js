@@ -113,7 +113,7 @@ function enterDigit(digitEl) {
       data["result"] = "";
       updateDisplay();
     } else {
-      data["op2"] += digit;
+      data["op2"] = data["op2"] !== "0" ? data["op2"] + digit : digit;
       updateDisplay();
     }
   } else if (data["sign1"]) {
