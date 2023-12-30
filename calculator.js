@@ -14,6 +14,19 @@ let data = {
   result: "",
 };
 
+const symbols = {
+  // data structure to replace math verbs to actual operator symbols
+  add: "+",
+  subtract: "−",
+  multiply: "×",
+  divide: "÷",
+  equal: "=",
+  "+": "add",
+  "-": "subtract",
+  "*": "multiply",
+  "/": "divide",
+};
+
 let calcDisplay = {
   mainScreen: "",
   secondScreen: "",
@@ -46,15 +59,6 @@ function initCalc() {
 }
 
 function updateDisplay(input) {
-  const symbols = {
-    // data structure to replace math verbs to actual operator symbols
-    add: "+",
-    subtract: "−",
-    multiply: "×",
-    divide: "÷",
-    equal: "=",
-  };
-
   //                -- Changes in calcDisplay --
   // GIVEN STATE => op1: X , sign1; NO, op2: NO, sign2: NO, result: NO
   // OUTPUT => mainScreen: X, secondScreen: blank
@@ -65,7 +69,7 @@ function updateDisplay(input) {
   // GIVEN STATE => op1: X, sign1: +-*/, op2: Y, sign2: NO, result: NO
   // OUTPUT => mainScreen: Y, secondScreen: X =-/*
   //
-  // GIVEN STATE => op1: X, sign1: +-/*, op2: Y, sign2: +-/*, result: Z
+  // GIVEN STATE => op1: X, sign1: +-/*, op2: Y, sign2: NO, result: Z
   // OUTPUT => mainScreen: Z, secondScreen: Z +-*/
   //
   // GIVEN STATE => op1: X, sign1: +-/*, op2: Y, sign2: =, result: Z
@@ -93,7 +97,14 @@ function updateDisplay(input) {
 }
 
 function enterDigit(digitEl) {
-  let digit = digitEl.target.textContent;
+  let digit;
+
+  try {
+    digit = digitEl.target.textContent;
+  } catch {
+    digit = digitEl;
+  }
+
   if (data["sign2"] === "equal") {
     // STATE: X + Y = Z
     if (data["result"]) {
@@ -128,7 +139,13 @@ function enterDigit(digitEl) {
 }
 
 function enterOperator(operatorEl) {
-  let operator = operatorEl.target.getAttribute("name");
+  let operator;
+
+  try {
+    operator = operatorEl.target.getAttribute("name");
+  } catch {
+    operator = operatorEl;
+  }
 
   if (operator === "equal") {
     // INPUT: X + "" (=) || X + Y (=)
@@ -191,8 +208,27 @@ function deleteChar() {
   }
 }
 
+function keyboardInput(e) {
+  console.log("KEYDOWN: " + e.key);
+  e.preventDefault();
+  if (Number.isInteger(Number(e.key))) {
+    // 0-9 only
+    enterDigit(e.key);
+    console.log("key: " + e.key);
+  } else if (symbols.hasOwnProperty(e.key)) {
+    enterOperator(symbols[e.key]);
+  } else if (e.key === "Escape") {
+    initCalc();
+  } else if (e.key === "Backspace") {
+    deleteChar();
+  } else if (e.key === "Enter" || e.key === "=") {
+    enterOperator("equal");
+  }
+}
+
 initCalc();
 btnClear.addEventListener("click", initCalc);
 btnDel.addEventListener("click", deleteChar);
 btnsDigits.forEach((el) => el.addEventListener("click", enterDigit));
 btnsOperators.forEach((el) => el.addEventListener("click", enterOperator));
+document.querySelector("body").addEventListener("keydown", keyboardInput);
