@@ -171,7 +171,28 @@ function enterOperator(operatorEl) {
   }
 }
 
+function deleteChar() {
+  if (data["op2"] && data["result"]) {
+    // STATE: X + Y = Z
+    data["op1"] = data["result"];
+    data["sign1"] = "";
+    data["op2"] = "";
+    data["sign2"] = "";
+    data["result"] = "";
+    updateDisplay();
+  } else if (data["op2"] && data["op2"] !== "0") {
+    // STATE: X + Y
+    data["op2"] = data["op2"].length === 1 ? "0" : data["op2"].slice(0, -1);
+    updateDisplay();
+  } else if (data["op1"] && data["op1"] !== "0" && !data["sign1"]) {
+    // STATE: X
+    data["op1"] = data["op1"].length === 1 ? "0" : data["op1"].slice(0, -1);
+    updateDisplay();
+  }
+}
+
 initCalc();
 btnClear.addEventListener("click", initCalc);
+btnDel.addEventListener("click", deleteChar);
 btnsDigits.forEach((el) => el.addEventListener("click", enterDigit));
 btnsOperators.forEach((el) => el.addEventListener("click", enterOperator));
