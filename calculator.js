@@ -15,7 +15,7 @@ let data = {
 };
 
 const symbols = {
-  // data structure to replace math verbs to actual operator symbols
+  // data structure to replace math verbs to actual operator symbols and vice versa
   add: "+",
   subtract: "−",
   multiply: "×",
@@ -40,9 +40,9 @@ function calc(a, op, b) {
     subtract: (a, b) => +a - +b,
   };
 
-  return Number.isNaN(calculator[op](a, b))
-    ? "0"
-    : calculator[op](a, b).toString();
+  return Number.isFinite(calculator[op](a, b))
+    ? calculator[op](a, b).toString()
+    : "0";
 }
 
 function initCalc() {
@@ -166,7 +166,7 @@ function enterOperator(operatorEl) {
   } else {
     if (data["sign2"] === "equal") {
       // INPUT: X + Y = Z (+-/*)
-      data["op1"] = data["result"];
+      data["op1"] = data["result"] || data["op1"];
       data["sign1"] = operator;
       data["op2"] = "";
       data["sign2"] = "";
@@ -209,9 +209,8 @@ function deleteChar() {
 }
 
 function keyboardInput(e) {
-  console.log("KEYDOWN: " + e.key);
   e.preventDefault();
-  if (Number.isInteger(Number(e.key))) {
+  if (Number.isInteger(Number(e.key)) && e.key !== " ") {
     // 0-9 only
     enterDigit(e.key);
     console.log("key: " + e.key);
